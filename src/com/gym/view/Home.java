@@ -1,6 +1,23 @@
 package com.gym.view;
 
 /**
+ * <b>Home Screen for the Gym Management System</b>
+ *
+ * <p>
+ * The Home class represents the main entry screen of the application, providing
+ * users with options to navigate to other parts of the system.</p>
+ *
+ * <p>
+ * Features include:</p>
+ * <ul>
+ * <li>Navigation buttons to the Admin Panel ("Learn More" and "Join Now").</li>
+ * <li>An "Exit" button to close the application.</li>
+ * <li>Custom-designed layout for a professional UI experience.</li>
+ * </ul>
+ *
+ * <p>
+ * Note: This class manages a single instance of the AdminPanel and ensures
+ * proper visibility toggling between the Home and AdminPanel screens.</p>
  *
  * @author Anish Shrestha 23048634
  */
@@ -9,11 +26,11 @@ public class Home extends javax.swing.JFrame {
     /**
      * Creates new form home
      */
-    AdminPanel addMember;
-    DashBoard dashboard;
+    private final AdminPanel adminPanel = new AdminPanel();
 
     public Home() {
         initComponents();
+        adminPanel.setVisible(false);
     }
 
     /**
@@ -31,9 +48,6 @@ public class Home extends javax.swing.JFrame {
         btnJoinNow = new javax.swing.JButton();
         btnExit = new javax.swing.JButton();
         lblHomeIcon = new javax.swing.JLabel();
-        MenuBar = new javax.swing.JMenuBar();
-        menuDashboard = new javax.swing.JMenu();
-        menuAdminPanel = new javax.swing.JMenu();
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -48,10 +62,10 @@ public class Home extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setLocation(new java.awt.Point(10, 5));
-        setMaximumSize(new java.awt.Dimension(1900, 1000));
-        setMinimumSize(new java.awt.Dimension(1900, 1000));
+        setMaximumSize(new java.awt.Dimension(1900, 962));
+        setMinimumSize(new java.awt.Dimension(1900, 962));
         setUndecorated(true);
-        setPreferredSize(new java.awt.Dimension(1900, 1000));
+        setPreferredSize(new java.awt.Dimension(1900, 962));
         setResizable(false);
 
         pnlHomeMain.setBackground(new java.awt.Color(0, 0, 0));
@@ -107,28 +121,6 @@ public class Home extends javax.swing.JFrame {
         pnlHomeMain.add(lblHomeIcon);
         lblHomeIcon.setBounds(0, 0, 2502, 1110);
 
-        MenuBar.setBackground(new java.awt.Color(0, 0, 0));
-
-        menuDashboard.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/gym/resource/dasboard.png"))); // NOI18N
-        menuDashboard.setText("DashBoard");
-        menuDashboard.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                menuDashboardMouseClicked(evt);
-            }
-        });
-        MenuBar.add(menuDashboard);
-
-        menuAdminPanel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/gym/resource/new member.png"))); // NOI18N
-        menuAdminPanel.setText("Admin Panel");
-        menuAdminPanel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                menuAdminPanelMouseClicked(evt);
-            }
-        });
-        MenuBar.add(menuAdminPanel);
-
-        setJMenuBar(MenuBar);
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -144,78 +136,29 @@ public class Home extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
     /**
-     * Event handler for the Admin Panel menu click event. Opens the Admin Panel
-     * if it is not already visible, or brings the existing Admin Panel window
-     * to the front if it is already open.
-     *
-     * @param evt The MouseEvent triggered by the menu item click.
-     */
-    private void menuAdminPanelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuAdminPanelMouseClicked
-        // TODO add your handling code here:      
-        if (addMember == null || !addMember.isVisible()) {
-            addMember = new AdminPanel();
-            addMember.setVisible(true);
-        } else {
-            addMember.toFront(); // Bring the existing window to the front
-        }
-    }//GEN-LAST:event_menuAdminPanelMouseClicked
-    /**
-     * Event handler for the "Learn More" button click event. Triggers a mouse
-     * click on the Dashboard menu, simulating a click to navigate to the
-     * Dashboard page.
+     * Event handler for the "Learn More" button. Opens the AdminPanel window
+     * and hides the current window.
      *
      * @param evt The ActionEvent triggered by the button click.
      */
     private void btnLearnMoreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLearnMoreActionPerformed
-        // TODO add your handling code here:
-        java.awt.event.MouseEvent mouseEvent = new java.awt.event.MouseEvent(
-                this, // Source component
-                java.awt.event.MouseEvent.MOUSE_CLICKED, // Event type
-                System.currentTimeMillis(), // When the event occurred
-                0, // No modifiers (e.g., no Ctrl, Alt)
-                0, 0, // X and Y coordinates (irrelevant in this case)
-                1, // Click count
-                false
-        );
-        menuDashboardMouseClicked(mouseEvent);
+        adminPanel.setVisible(true);
+        this.setVisible(false);
     }//GEN-LAST:event_btnLearnMoreActionPerformed
     /**
-     * Event handler for the "Join Now" button click event. Triggers a mouse
-     * click on the Admin Panel menu, simulating a click to navigate to the
-     * Admin Panel page.
+     * Event handler for the "Join Now" button click event. Displays the
+     * AdminPanel window and hides the current window, allowing the user to
+     * transition to the member management interface.
      *
      * @param evt The ActionEvent triggered by the button click.
      */
     private void btnJoinNowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnJoinNowActionPerformed
-        // TODO add your handling code here:
-        java.awt.event.MouseEvent mouseEvent = new java.awt.event.MouseEvent(
-                this, // Source component
-                java.awt.event.MouseEvent.MOUSE_CLICKED, // Event type
-                System.currentTimeMillis(), // When the event occurred
-                0, // No modifiers (e.g., no Ctrl, Alt)
-                0, 0, // X and Y coordinates (irrelevant in this case)
-                1, // Click count
-                false // Not a popup trigger
-        );
-        menuAdminPanelMouseClicked(mouseEvent);
+        adminPanel.setVisible(true);
+        this.setVisible(false);
     }//GEN-LAST:event_btnJoinNowActionPerformed
-    /**
-     * Event handler for the Dashboard menu click event. Opens the Dashboard if
-     * it is not already visible, or brings the existing Dashboard window to the
-     * front if it is already open.
-     *
-     * @param evt The MouseEvent triggered by the menu item click.
-     */
-    private void menuDashboardMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuDashboardMouseClicked
-        // TODO add your handling code here:
-        if (dashboard == null || !dashboard.isVisible()) {
-            dashboard = new DashBoard(); // Create a new instance of DashBoard
-            dashboard.setVisible(true);  // Make it visible
-        } else {
-            dashboard.toFront(); // Bring the existing instance to the front
-        }
-    }//GEN-LAST:event_menuDashboardMouseClicked
+
     /**
      * Event handler for the "Exit" button click event. Closes the application
      * by calling System.exit(0), terminating the program.
@@ -264,14 +207,11 @@ public class Home extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JMenuBar MenuBar;
     private javax.swing.JButton btnExit;
     private javax.swing.JButton btnJoinNow;
     private javax.swing.JButton btnLearnMore;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblHomeIcon;
-    private javax.swing.JMenu menuAdminPanel;
-    private javax.swing.JMenu menuDashboard;
     private javax.swing.JPanel pnlHomeMain;
     // End of variables declaration//GEN-END:variables
 }

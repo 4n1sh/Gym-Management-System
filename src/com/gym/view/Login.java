@@ -2,6 +2,21 @@
 package com.gym.view;
 
 /**
+ * <b>Login Screen for Gym Management System</b>
+ *
+ * <p>
+ * Provides a user interface for logging into the system. Features include:
+ * </p>
+ * <ul>
+ * <li>Email and password fields with admin validation.</li>
+ * <li>Password visibility toggle.</li>
+ * <li>Error message for invalid credentials.</li>
+ * <li>Exit button to close the app.</li>
+ * </ul>
+ *
+ * <p>
+ * Note: Credentials are hardcoded for demo purposes. Use secure authentication
+ * in production.</p>
  *
  * @author Anish Shrestha 23048634
  */
@@ -155,7 +170,7 @@ public class Login extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-/**
+    /**
      * Event handler for the login button. Validates the entered email and
      * password. If they match the predefined values, the user is redirected to
      * the Home screen. If the credentials are incorrect, an error message is
@@ -173,9 +188,9 @@ public class Login extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnLoginActionPerformed
     /* Event handler for the checkbox to show or hide the password.
- * If the checkbox is selected, the password field will display the entered password
- * as plain text. If unselected, the password will be masked with asterisks.
- * @param evt The ActionEvent triggered by the checkbox click.
+    * If the checkbox is selected, the password field will display the entered password
+    * as plain text. If unselected, the password will be masked with asterisks.
+    * @param evt The ActionEvent triggered by the checkbox click.
      */
     private void ckLoginShowPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ckLoginShowPasswordActionPerformed
         // TODO add your handling code here:

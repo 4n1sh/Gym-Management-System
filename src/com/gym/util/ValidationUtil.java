@@ -1,14 +1,10 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.gym.util;
 
 import java.util.regex.Pattern;
 
 /**
  *
- * @author Anish
+ * @author Anish Shrestha 23048634
  */
 public class ValidationUtil {
 
@@ -34,6 +30,7 @@ public class ValidationUtil {
     public static boolean validateFee(String fee) {
         return Pattern.matches(FEE_REGEX, fee);
     }
+
     public static boolean validateId(String id) {
         return Pattern.matches(ID_REGEX, id);
     }

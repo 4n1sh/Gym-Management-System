@@ -2,6 +2,11 @@
 package com.gym.view;
 // Import statements for necessary classes and utilities
 
+import com.gym.controller.algorithms.BinarySearch;
+import com.gym.controller.algorithms.InsertionSort;
+import com.gym.controller.algorithms.MergeSort;
+import com.gym.controller.algorithms.SelectionSort;
+import com.gym.controller.dataStructure.CustomStack;
 import com.gym.model.GymModel;
 import com.gym.util.ValidationUtil;
 import java.awt.Color;
@@ -14,12 +19,33 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 /**
+ * <b>Admin Panel for Gym Management System</b>
+ *
+ * <p>
+ * Provides functionalities for managing gym data, including:
+ * </p>
+ * <ul>
+ * <li>Sorting data using Merge Sort.</li>
+ * <li>Searching records with Binary Search.</li>
+ * <li>CRUD (Create, Read, Update, Delete) operations.</li>
+ * </ul>
+ *
+ * <p>
+ * Features a user-friendly interface for efficient gym data management and
+ * ensures optimal performance through algorithmic operations.</p>
  *
  * @author Anish Shrestha 23048634
  */
 public class AdminPanel extends javax.swing.JFrame {
 
     private final List<GymModel> memberList = new LinkedList();
+    private final CustomStack stackList = new CustomStack();
+    private final SelectionSort SelectionSort = new SelectionSort();
+    private final InsertionSort insertionSort = new InsertionSort();
+    private final MergeSort mergeSort = new MergeSort();
+    private boolean ascending = true;
+    private final BinarySearch search = new BinarySearch();
+    DefaultTableModel stackTable;
 
     /**
      * Constructor for the AdminPanel class. Initializes the panel components,
@@ -30,6 +56,7 @@ public class AdminPanel extends javax.swing.JFrame {
         initComponents();
         pnlTable.setVisible(false);
         initializeData();
+        this.stackTable = (DefaultTableModel) stackNewMemberTable.getModel();
     }
 
     /**
@@ -42,6 +69,23 @@ public class AdminPanel extends javax.swing.JFrame {
     private void initComponents() {
 
         genderGroup = new javax.swing.ButtonGroup();
+        pnlMenuBar = new javax.swing.JPanel();
+        btnAdminPanel = new javax.swing.JButton();
+        btnDashboard = new javax.swing.JButton();
+        btnExit1 = new javax.swing.JButton();
+        tbMain = new javax.swing.JTabbedPane();
+        pnlAdminPanel = new javax.swing.JPanel();
+        pnlTable = new javax.swing.JPanel();
+        spMemberTable = new javax.swing.JScrollPane();
+        tblMember = new javax.swing.JTable();
+        btnBack = new javax.swing.JButton();
+        btnUpdateList = new javax.swing.JButton();
+        btnDeleteMember = new javax.swing.JButton();
+        cbSortBy = new javax.swing.JComboBox<>();
+        btnSort = new javax.swing.JButton();
+        btnSearch = new javax.swing.JButton();
+        tfSearchField = new javax.swing.JTextField();
+        lblListOfMemberIcon = new javax.swing.JLabel();
         pnlAddMemberMain = new javax.swing.JPanel();
         btnSave = new javax.swing.JButton();
         lblAmountToPay = new javax.swing.JLabel();
@@ -74,23 +118,256 @@ public class AdminPanel extends javax.swing.JFrame {
         lblErrorGender = new javax.swing.JLabel();
         lblErrorName = new javax.swing.JLabel();
         btnUpdateMain = new javax.swing.JButton();
-        btnExit = new javax.swing.JButton();
         lblAddMemberIcon = new javax.swing.JLabel();
-        pnlTable = new javax.swing.JPanel();
-        spMemberTable = new javax.swing.JScrollPane();
-        tblMember = new javax.swing.JTable();
-        btnBack = new javax.swing.JButton();
-        btnUpdateList = new javax.swing.JButton();
-        btnDeleteMember = new javax.swing.JButton();
-        lblListOfMemberIcon = new javax.swing.JLabel();
+        pnlDashBoard = new javax.swing.JPanel();
+        pnlShowNewMember = new javax.swing.JPanel();
+        lblNewMemberTitle = new javax.swing.JLabel();
+        lblNewMemberName = new javax.swing.JLabel();
+        lblIconNewMember = new javax.swing.JLabel();
+        pnlShowRevenue = new javax.swing.JPanel();
+        lblRevenueTitle = new javax.swing.JLabel();
+        lblRevenue = new javax.swing.JLabel();
+        lblIconMoney = new javax.swing.JLabel();
+        pnlShowTotalMember = new javax.swing.JPanel();
+        lblTotalMemberTitle = new javax.swing.JLabel();
+        lblTotalMember = new javax.swing.JLabel();
+        lblTotalMemberIcon = new javax.swing.JLabel();
+        pnlShowUPcomingEvents = new javax.swing.JPanel();
+        lblUpcomingEventTitle = new javax.swing.JLabel();
+        lblEventName = new javax.swing.JLabel();
+        lblEventIcon = new javax.swing.JLabel();
+        stackDataTable = new javax.swing.JLabel();
+        spNewMemberTable = new javax.swing.JScrollPane();
+        stackNewMemberTable = new javax.swing.JTable();
+        spEvent = new javax.swing.JScrollPane();
+        tblEvents = new javax.swing.JTable();
+        jLabel1 = new javax.swing.JLabel();
+        lblDashBoardIcon = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setLocation(new java.awt.Point(10, 42));
-        setMaximumSize(new java.awt.Dimension(1900, 963));
-        setMinimumSize(new java.awt.Dimension(1900, 963));
+        setMaximumSize(new java.awt.Dimension(1900, 958));
+        setMinimumSize(new java.awt.Dimension(1900, 958));
         setUndecorated(true);
-        setPreferredSize(new java.awt.Dimension(1900, 963));
+        setPreferredSize(new java.awt.Dimension(1900, 958));
         setResizable(false);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        pnlMenuBar.setBackground(new java.awt.Color(0, 0, 0));
+        pnlMenuBar.setPreferredSize(new java.awt.Dimension(1900, 50));
+
+        btnAdminPanel.setBackground(new java.awt.Color(0, 0, 0));
+        btnAdminPanel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        btnAdminPanel.setForeground(new java.awt.Color(255, 196, 40));
+        btnAdminPanel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/gym/resource/adminPanelMenuIcon.png"))); // NOI18N
+        btnAdminPanel.setText("Admin Panel");
+        btnAdminPanel.setBorderPainted(false);
+        btnAdminPanel.setContentAreaFilled(false);
+        btnAdminPanel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAdminPanel.setFocusPainted(false);
+        btnAdminPanel.setFocusable(false);
+        btnAdminPanel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAdminPanelActionPerformed(evt);
+            }
+        });
+
+        btnDashboard.setBackground(new java.awt.Color(0, 0, 0));
+        btnDashboard.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        btnDashboard.setForeground(new java.awt.Color(255, 196, 40));
+        btnDashboard.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/gym/resource/dashboardMenuIcon.png"))); // NOI18N
+        btnDashboard.setText("Dashboard");
+        btnDashboard.setBorderPainted(false);
+        btnDashboard.setContentAreaFilled(false);
+        btnDashboard.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnDashboard.setFocusPainted(false);
+        btnDashboard.setFocusable(false);
+        btnDashboard.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDashboardActionPerformed(evt);
+            }
+        });
+
+        btnExit1.setBackground(new java.awt.Color(0, 0, 0));
+        btnExit1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        btnExit1.setForeground(new java.awt.Color(255, 196, 40));
+        btnExit1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/gym/resource/exitMenuIcon.png"))); // NOI18N
+        btnExit1.setText("Exit");
+        btnExit1.setBorder(null);
+        btnExit1.setBorderPainted(false);
+        btnExit1.setContentAreaFilled(false);
+        btnExit1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnExit1.setFocusPainted(false);
+        btnExit1.setFocusable(false);
+        btnExit1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExit1ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout pnlMenuBarLayout = new javax.swing.GroupLayout(pnlMenuBar);
+        pnlMenuBar.setLayout(pnlMenuBarLayout);
+        pnlMenuBarLayout.setHorizontalGroup(
+            pnlMenuBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlMenuBarLayout.createSequentialGroup()
+                .addGap(13, 13, 13)
+                .addComponent(btnDashboard)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnAdminPanel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnExit1, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(1438, Short.MAX_VALUE))
+        );
+        pnlMenuBarLayout.setVerticalGroup(
+            pnlMenuBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlMenuBarLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(pnlMenuBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnAdminPanel)
+                    .addComponent(btnDashboard)
+                    .addComponent(btnExit1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+
+        getContentPane().add(pnlMenuBar, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+
+        tbMain.setBackground(new java.awt.Color(0, 0, 0));
+
+        pnlTable.setBackground(new java.awt.Color(0, 0, 0));
+        pnlTable.setMaximumSize(new java.awt.Dimension(1900, 963));
+        pnlTable.setMinimumSize(new java.awt.Dimension(1900, 963));
+        pnlTable.setPreferredSize(new java.awt.Dimension(1900, 963));
+        pnlTable.setLayout(null);
+
+        spMemberTable.setBackground(new java.awt.Color(204, 204, 204));
+
+        tblMember.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Member Id", "Name", "Number", "Age", "Gender", "Email", "Address", "GymTime", "Fee"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblMember.setRowHeight(30);
+        tblMember.getTableHeader().setReorderingAllowed(false);
+        spMemberTable.setViewportView(tblMember);
+        if (tblMember.getColumnModel().getColumnCount() > 0) {
+            tblMember.getColumnModel().getColumn(0).setResizable(false);
+            tblMember.getColumnModel().getColumn(0).setPreferredWidth(10);
+            tblMember.getColumnModel().getColumn(1).setResizable(false);
+            tblMember.getColumnModel().getColumn(2).setResizable(false);
+            tblMember.getColumnModel().getColumn(3).setResizable(false);
+            tblMember.getColumnModel().getColumn(3).setPreferredWidth(10);
+            tblMember.getColumnModel().getColumn(4).setResizable(false);
+            tblMember.getColumnModel().getColumn(4).setPreferredWidth(15);
+            tblMember.getColumnModel().getColumn(5).setResizable(false);
+            tblMember.getColumnModel().getColumn(5).setPreferredWidth(100);
+            tblMember.getColumnModel().getColumn(6).setResizable(false);
+            tblMember.getColumnModel().getColumn(7).setResizable(false);
+            tblMember.getColumnModel().getColumn(8).setResizable(false);
+            tblMember.getColumnModel().getColumn(8).setPreferredWidth(15);
+        }
+
+        pnlTable.add(spMemberTable);
+        spMemberTable.setBounds(190, 300, 1450, 530);
+
+        btnBack.setBackground(new java.awt.Color(0, 0, 0));
+        btnBack.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnBack.setForeground(new java.awt.Color(255, 0, 51));
+        btnBack.setText("Back");
+        btnBack.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnBack.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBackActionPerformed(evt);
+            }
+        });
+        pnlTable.add(btnBack);
+        btnBack.setBounds(1540, 100, 100, 40);
+
+        btnUpdateList.setBackground(new java.awt.Color(0, 0, 0));
+        btnUpdateList.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnUpdateList.setForeground(new java.awt.Color(255, 0, 0));
+        btnUpdateList.setText("Update Selected Row");
+        btnUpdateList.setBorder(null);
+        btnUpdateList.setBorderPainted(false);
+        btnUpdateList.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnUpdateList.setFocusPainted(false);
+        btnUpdateList.setFocusable(false);
+        btnUpdateList.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdateListActionPerformed(evt);
+            }
+        });
+        pnlTable.add(btnUpdateList);
+        btnUpdateList.setBounds(230, 860, 180, 30);
+
+        btnDeleteMember.setBackground(new java.awt.Color(0, 0, 0));
+        btnDeleteMember.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnDeleteMember.setForeground(new java.awt.Color(255, 0, 0));
+        btnDeleteMember.setText("Delete Selected Row");
+        btnDeleteMember.setBorder(null);
+        btnDeleteMember.setBorderPainted(false);
+        btnDeleteMember.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnDeleteMember.setFocusPainted(false);
+        btnDeleteMember.setFocusable(false);
+        btnDeleteMember.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteMemberActionPerformed(evt);
+            }
+        });
+        pnlTable.add(btnDeleteMember);
+        btnDeleteMember.setBounds(430, 860, 180, 30);
+
+        cbSortBy.setBackground(new java.awt.Color(255, 196, 40));
+        cbSortBy.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        cbSortBy.setForeground(new java.awt.Color(0, 0, 0));
+        cbSortBy.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Member Id", "Name", "Fee" }));
+        cbSortBy.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Sort By", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Segoe UI", 1, 12), new java.awt.Color(0, 0, 0))); // NOI18N
+        cbSortBy.setFocusable(false);
+        cbSortBy.setLightWeightPopupEnabled(false);
+        pnlTable.add(cbSortBy);
+        cbSortBy.setBounds(1340, 240, 140, 50);
+
+        btnSort.setBackground(new java.awt.Color(255, 196, 40));
+        btnSort.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnSort.setForeground(new java.awt.Color(0, 0, 0));
+        btnSort.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/gym/resource/sort-ascending.png"))); // NOI18N
+        btnSort.setText("Ascending");
+        btnSort.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSortActionPerformed(evt);
+            }
+        });
+        pnlTable.add(btnSort);
+        btnSort.setBounds(1510, 240, 130, 50);
+
+        btnSearch.setBackground(new java.awt.Color(255, 196, 40));
+        btnSearch.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnSearch.setForeground(new java.awt.Color(0, 0, 0));
+        btnSearch.setText("Search");
+        btnSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSearchActionPerformed(evt);
+            }
+        });
+        pnlTable.add(btnSearch);
+        btnSearch.setBounds(680, 240, 90, 50);
+        pnlTable.add(tfSearchField);
+        tfSearchField.setBounds(190, 240, 470, 50);
+
+        lblListOfMemberIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/gym/resource/listOfmemberIcon.png"))); // NOI18N
+        lblListOfMemberIcon.setText("jLabel2");
+        pnlTable.add(lblListOfMemberIcon);
+        lblListOfMemberIcon.setBounds(0, 10, 2163, 963);
 
         pnlAddMemberMain.setBackground(new java.awt.Color(0, 0, 0));
         pnlAddMemberMain.setMaximumSize(new java.awt.Dimension(1900, 963));
@@ -313,165 +590,239 @@ public class AdminPanel extends javax.swing.JFrame {
             }
         });
         pnlAddMemberMain.add(btnUpdateMain);
-        btnUpdateMain.setBounds(490, 640, 130, 40);
-
-        btnExit.setBackground(new java.awt.Color(0, 0, 0));
-        btnExit.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btnExit.setForeground(new java.awt.Color(255, 0, 0));
-        btnExit.setText("Exit");
-        btnExit.setBorder(null);
-        btnExit.setBorderPainted(false);
-        btnExit.setContentAreaFilled(false);
-        btnExit.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnExit.setFocusPainted(false);
-        btnExit.setFocusable(false);
-        btnExit.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnExitActionPerformed(evt);
-            }
-        });
-        pnlAddMemberMain.add(btnExit);
-        btnExit.setBounds(1840, 0, 60, 30);
+        btnUpdateMain.setBounds(480, 640, 130, 40);
 
         lblAddMemberIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/gym/resource/adminPanelIcon.png"))); // NOI18N
         lblAddMemberIcon.setText("jLabel10");
         pnlAddMemberMain.add(lblAddMemberIcon);
         lblAddMemberIcon.setBounds(0, 0, 2308, 970);
 
-        pnlTable.setMaximumSize(new java.awt.Dimension(1900, 963));
-        pnlTable.setMinimumSize(new java.awt.Dimension(1900, 963));
-        pnlTable.setPreferredSize(new java.awt.Dimension(1900, 963));
-        pnlTable.setLayout(null);
+        javax.swing.GroupLayout pnlAdminPanelLayout = new javax.swing.GroupLayout(pnlAdminPanel);
+        pnlAdminPanel.setLayout(pnlAdminPanelLayout);
+        pnlAdminPanelLayout.setHorizontalGroup(
+            pnlAdminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1900, Short.MAX_VALUE)
+            .addGroup(pnlAdminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(pnlAdminPanelLayout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(pnlTable, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
+            .addGroup(pnlAdminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(pnlAdminPanelLayout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(pnlAddMemberMain, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
+        );
+        pnlAdminPanelLayout.setVerticalGroup(
+            pnlAdminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 995, Short.MAX_VALUE)
+            .addGroup(pnlAdminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(pnlAdminPanelLayout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(pnlTable, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
+            .addGroup(pnlAdminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(pnlAdminPanelLayout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(pnlAddMemberMain, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
+        );
 
-        spMemberTable.setBackground(new java.awt.Color(204, 204, 204));
+        tbMain.addTab("tab3", pnlAdminPanel);
 
-        tblMember.setModel(new javax.swing.table.DefaultTableModel(
+        pnlDashBoard.setBackground(new java.awt.Color(0, 0, 0));
+        pnlDashBoard.setMaximumSize(new java.awt.Dimension(1900, 963));
+        pnlDashBoard.setMinimumSize(new java.awt.Dimension(1900, 963));
+        pnlDashBoard.setLayout(null);
+
+        pnlShowNewMember.setBackground(new java.awt.Color(255, 196, 40));
+        pnlShowNewMember.setLayout(null);
+
+        lblNewMemberTitle.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
+        lblNewMemberTitle.setForeground(new java.awt.Color(0, 0, 0));
+        lblNewMemberTitle.setText("New Member");
+        pnlShowNewMember.add(lblNewMemberTitle);
+        lblNewMemberTitle.setBounds(20, 10, 260, 60);
+
+        lblNewMemberName.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        lblNewMemberName.setForeground(new java.awt.Color(0, 0, 0));
+        lblNewMemberName.setText("Emma Stone");
+        pnlShowNewMember.add(lblNewMemberName);
+        lblNewMemberName.setBounds(20, 110, 160, 32);
+
+        lblIconNewMember.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/gym/resource/member.png"))); // NOI18N
+        pnlShowNewMember.add(lblIconNewMember);
+        lblIconNewMember.setBounds(199, 61, 100, 123);
+
+        pnlDashBoard.add(pnlShowNewMember);
+        pnlShowNewMember.setBounds(80, 320, 330, 220);
+
+        pnlShowRevenue.setBackground(new java.awt.Color(255, 196, 40));
+        pnlShowRevenue.setMaximumSize(new java.awt.Dimension(332, 220));
+        pnlShowRevenue.setMinimumSize(new java.awt.Dimension(332, 220));
+        pnlShowRevenue.setPreferredSize(new java.awt.Dimension(332, 220));
+        pnlShowRevenue.setLayout(null);
+
+        lblRevenueTitle.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
+        lblRevenueTitle.setForeground(new java.awt.Color(0, 0, 0));
+        lblRevenueTitle.setText("Revenue");
+        pnlShowRevenue.add(lblRevenueTitle);
+        lblRevenueTitle.setBounds(20, 10, 180, 66);
+
+        lblRevenue.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+        lblRevenue.setForeground(new java.awt.Color(0, 0, 0));
+        lblRevenue.setText("2,00,000");
+        pnlShowRevenue.add(lblRevenue);
+        lblRevenue.setBounds(30, 100, 130, 48);
+
+        lblIconMoney.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/gym/resource/money.png"))); // NOI18N
+        pnlShowRevenue.add(lblIconMoney);
+        lblIconMoney.setBounds(198, 61, 100, 100);
+
+        pnlDashBoard.add(pnlShowRevenue);
+        pnlShowRevenue.setBounds(530, 320, 310, 220);
+
+        pnlShowTotalMember.setBackground(new java.awt.Color(255, 196, 40));
+        pnlShowTotalMember.setLayout(null);
+
+        lblTotalMemberTitle.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
+        lblTotalMemberTitle.setForeground(new java.awt.Color(0, 0, 0));
+        lblTotalMemberTitle.setText("Total Members");
+        pnlShowTotalMember.add(lblTotalMemberTitle);
+        lblTotalMemberTitle.setBounds(20, 10, 270, 66);
+
+        lblTotalMember.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+        lblTotalMember.setForeground(new java.awt.Color(0, 0, 0));
+        lblTotalMember.setText("265");
+        pnlShowTotalMember.add(lblTotalMember);
+        lblTotalMember.setBounds(39, 100, 140, 40);
+
+        lblTotalMemberIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/gym/resource/totalMember.png"))); // NOI18N
+        pnlShowTotalMember.add(lblTotalMemberIcon);
+        lblTotalMemberIcon.setBounds(217, 79, 100, 100);
+
+        pnlDashBoard.add(pnlShowTotalMember);
+        pnlShowTotalMember.setBounds(1450, 320, 330, 220);
+
+        pnlShowUPcomingEvents.setBackground(new java.awt.Color(255, 196, 40));
+        pnlShowUPcomingEvents.setLayout(null);
+
+        lblUpcomingEventTitle.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
+        lblUpcomingEventTitle.setForeground(new java.awt.Color(0, 0, 0));
+        lblUpcomingEventTitle.setText("Upcoming Event");
+        pnlShowUPcomingEvents.add(lblUpcomingEventTitle);
+        lblUpcomingEventTitle.setBounds(20, 10, 290, 66);
+
+        lblEventName.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        lblEventName.setForeground(new java.awt.Color(0, 0, 0));
+        lblEventName.setText("Classic Physique");
+        pnlShowUPcomingEvents.add(lblEventName);
+        lblEventName.setBounds(32, 109, 190, 32);
+
+        lblEventIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/gym/resource/event.png"))); // NOI18N
+        pnlShowUPcomingEvents.add(lblEventIcon);
+        lblEventIcon.setBounds(226, 67, 100, 100);
+
+        pnlDashBoard.add(pnlShowUPcomingEvents);
+        pnlShowUPcomingEvents.setBounds(990, 320, 330, 220);
+
+        stackDataTable.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        stackDataTable.setForeground(new java.awt.Color(255, 196, 40));
+        stackDataTable.setText("Lastest Members");
+        pnlDashBoard.add(stackDataTable);
+        stackDataTable.setBounds(80, 590, 320, 30);
+
+        stackNewMemberTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Member Id", "Name", "Number", "Age", "Gender", "Email", "Address", "GymTime", "Fee"
+                "Id", "Name", "phone"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false
+                false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        tblMember.setRowHeight(30);
-        tblMember.getTableHeader().setReorderingAllowed(false);
-        spMemberTable.setViewportView(tblMember);
-        if (tblMember.getColumnModel().getColumnCount() > 0) {
-            tblMember.getColumnModel().getColumn(0).setResizable(false);
-            tblMember.getColumnModel().getColumn(0).setPreferredWidth(10);
-            tblMember.getColumnModel().getColumn(1).setResizable(false);
-            tblMember.getColumnModel().getColumn(2).setResizable(false);
-            tblMember.getColumnModel().getColumn(3).setResizable(false);
-            tblMember.getColumnModel().getColumn(3).setPreferredWidth(10);
-            tblMember.getColumnModel().getColumn(4).setResizable(false);
-            tblMember.getColumnModel().getColumn(4).setPreferredWidth(15);
-            tblMember.getColumnModel().getColumn(5).setResizable(false);
-            tblMember.getColumnModel().getColumn(5).setPreferredWidth(100);
-            tblMember.getColumnModel().getColumn(6).setResizable(false);
-            tblMember.getColumnModel().getColumn(7).setResizable(false);
-            tblMember.getColumnModel().getColumn(8).setResizable(false);
-            tblMember.getColumnModel().getColumn(8).setPreferredWidth(15);
+        stackNewMemberTable.setRowHeight(30);
+        stackNewMemberTable.getTableHeader().setReorderingAllowed(false);
+        spNewMemberTable.setViewportView(stackNewMemberTable);
+        if (stackNewMemberTable.getColumnModel().getColumnCount() > 0) {
+            stackNewMemberTable.getColumnModel().getColumn(0).setResizable(false);
+            stackNewMemberTable.getColumnModel().getColumn(0).setPreferredWidth(10);
+            stackNewMemberTable.getColumnModel().getColumn(1).setResizable(false);
+            stackNewMemberTable.getColumnModel().getColumn(2).setResizable(false);
         }
 
-        pnlTable.add(spMemberTable);
-        spMemberTable.setBounds(250, 260, 1450, 530);
+        pnlDashBoard.add(spNewMemberTable);
+        spNewMemberTable.setBounds(80, 640, 510, 280);
 
-        btnBack.setBackground(new java.awt.Color(0, 0, 0));
-        btnBack.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btnBack.setForeground(new java.awt.Color(255, 0, 51));
-        btnBack.setText("Back");
-        btnBack.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnBack.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBackActionPerformed(evt);
+        tblEvents.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Event  Name", "Date"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
             }
         });
-        pnlTable.add(btnBack);
-        btnBack.setBounds(1560, 50, 100, 40);
+        tblEvents.setRowHeight(30);
+        tblEvents.getTableHeader().setReorderingAllowed(false);
+        spEvent.setViewportView(tblEvents);
+        if (tblEvents.getColumnModel().getColumnCount() > 0) {
+            tblEvents.getColumnModel().getColumn(0).setResizable(false);
+            tblEvents.getColumnModel().getColumn(1).setResizable(false);
+        }
 
-        btnUpdateList.setBackground(new java.awt.Color(0, 0, 0));
-        btnUpdateList.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btnUpdateList.setForeground(new java.awt.Color(255, 0, 0));
-        btnUpdateList.setText("Update Selected Row");
-        btnUpdateList.setBorder(null);
-        btnUpdateList.setBorderPainted(false);
-        btnUpdateList.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnUpdateList.setFocusPainted(false);
-        btnUpdateList.setFocusable(false);
-        btnUpdateList.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnUpdateListActionPerformed(evt);
-            }
-        });
-        pnlTable.add(btnUpdateList);
-        btnUpdateList.setBounds(320, 830, 180, 30);
+        pnlDashBoard.add(spEvent);
+        spEvent.setBounds(1290, 630, 490, 280);
 
-        btnDeleteMember.setBackground(new java.awt.Color(0, 0, 0));
-        btnDeleteMember.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btnDeleteMember.setForeground(new java.awt.Color(255, 0, 0));
-        btnDeleteMember.setText("Delete Selected Row");
-        btnDeleteMember.setBorder(null);
-        btnDeleteMember.setBorderPainted(false);
-        btnDeleteMember.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnDeleteMember.setFocusPainted(false);
-        btnDeleteMember.setFocusable(false);
-        btnDeleteMember.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDeleteMemberActionPerformed(evt);
-            }
-        });
-        pnlTable.add(btnDeleteMember);
-        btnDeleteMember.setBounds(550, 830, 180, 30);
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 196, 40));
+        jLabel1.setText("Upcoming Events");
+        pnlDashBoard.add(jLabel1);
+        jLabel1.setBounds(1290, 580, 240, 32);
 
-        lblListOfMemberIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/gym/resource/listOfmemberIcon.png"))); // NOI18N
-        lblListOfMemberIcon.setText("jLabel2");
-        pnlTable.add(lblListOfMemberIcon);
-        lblListOfMemberIcon.setBounds(0, 10, 2163, 963);
+        lblDashBoardIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/gym/resource/dashboardIcon.png"))); // NOI18N
+        pnlDashBoard.add(lblDashBoardIcon);
+        lblDashBoardIcon.setBounds(0, 0, 2282, 957);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pnlAddMemberMain, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(pnlTable, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(pnlAddMemberMain, javax.swing.GroupLayout.PREFERRED_SIZE, 970, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(pnlTable, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
-        );
+        tbMain.addTab("tab2", pnlDashBoard);
+
+        getContentPane().add(tbMain, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -32, -1, 1030));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-     private void initializeData() {
-        registerMember(new GymModel(1, "Laura Chen", (short) 21, "laurachen@gmail.com", "9849895698", "female", "5:00AM-11:00AM", 6000, "Lalitpur"));
-        registerMember(new GymModel(2, "Gerry Arno", (short) 24, "gerryarno@gmail.com", "9847895298", "male", "5:00AM-11:00AM", 12000, "Bhaktapur"));
+     /**
+     * Initializes the gym system with a set of predefined member data for
+     * testing or demonstration purposes. Each member is registered with
+     * attributes including ID, name, age, email, contact number, gender, gym
+     * time, fee amount, and address. This method populates the member list with
+     * diverse data to simulate real-world usage scenarios.
+     */
+
+    private void initializeData() {
+        registerMember(new GymModel(10, "Laura Chen", (short) 21, "laurachen@gmail.com", "9849895698", "female", "5:00AM-11:00AM", 6000, "Lalitpur"));
+        registerMember(new GymModel(4, "Gerry Arno", (short) 24, "gerryarno@gmail.com", "9847895298", "male", "5:00AM-11:00AM", 12000, "Bhaktapur"));
         registerMember(new GymModel(3, "alison Burgers", (short) 27, "alison@gmail.com", "9859895648", "male", "5:00AM-11:00AM", 6000, "Lalitpur"));
-        registerMember(new GymModel(4, "Chen Ming", (short) 30, "chenming@gmail.com", "9849695740", "male", "6:00AM-12:00PM", 7500, "Kathmandu"));
-        registerMember(new GymModel(5, "Liu Fang", (short) 25, "liufang@gmail.com", "9847564321", "female", "6:00AM-12:00PM", 8000, "Patan"));
-        registerMember(new GymModel(6, "Yang Chen", (short) 22, "yangchen@gmail.com", "9856543210", "male", "6:00AM-12:00PM", 7000, "Bhaktapur"));
+        registerMember(new GymModel(2, "Chen Ming", (short) 30, "chenming@gmail.com", "9849695740", "male", "6:00AM-12:00PM", 7500, "Kathmandu"));
+        registerMember(new GymModel(1, "Liu Fang", (short) 25, "liufang@gmail.com", "9847564321", "female", "6:00AM-12:00PM", 8000, "Patan"));
+        registerMember(new GymModel(9, "Yang Chen", (short) 22, "yangchen@gmail.com", "9856543210", "male", "6:00AM-12:00PM", 7000, "Bhaktapur"));
         registerMember(new GymModel(7, "Xiao Chen", (short) 28, "xiaozhao@gmail.com", "9845213245", "female", "6:00AM-12:00PM", 8500, "Lalitpur"));
         registerMember(new GymModel(8, "John Smith", (short) 22, "johnsmith@gmail.com", "9849895698", "male", "5:00AM-11:00AM", 6000, "Patan"));
-        registerMember(new GymModel(9, "Emily Johnson", (short) 25, "emilyjohnson@gmail.com", "9847895298", "female", "5:00AM-11:00AM", 12000, "Bhaktapur"));
-        registerMember(new GymModel(10, "Michael Brown", (short) 28, "michaelbrown@gmail.com", "9859895648", "male", "5:00AM-11:00AM", 7000, "Lalitpur"));
+        registerMember(new GymModel(6, "Emily Johnson", (short) 25, "emilyjohnson@gmail.com", "9847895298", "female", "5:00AM-11:00AM", 12000, "Bhaktapur"));
+        registerMember(new GymModel(5, "Michael Brown", (short) 28, "michaelbrown@gmail.com", "9859895648", "male", "5:00AM-11:00AM", 7000, "Lalitpur"));
     }
 
     /**
@@ -519,7 +870,7 @@ public class AdminPanel extends javax.swing.JFrame {
         String time = (String) cbGymTime.getSelectedItem();
         // Validating input fields using helper method
         isValid &= validateField(lblErrorGender, "Please select", ValidationUtil.validateGender(gender));
-        isValid &= validateField(lblErrorId, tfMemberId, "It must be a numeric value", ValidationUtil.validateId(memberId));
+        isValid &= validateField(lblErrorId, tfMemberId, "numeric value below 4 digits", ValidationUtil.validateId(memberId));
         isValid &= validateField(lblErrorName, tfName, "Name cannot contain number", ValidationUtil.validateName(name));
         isValid &= validateField(lblErrorEmail, tfEmail, "Please enter a valid email address", ValidationUtil.validateEmail(email));
         isValid &= validateField(lblErrorPhone, tfMobileNumber, "start with 98 and have 10 digits", ValidationUtil.validatePhone(phone));
@@ -541,7 +892,7 @@ public class AdminPanel extends javax.swing.JFrame {
             lblErrorAge.setText("must a numeric value");
             isValid = false;
         }
-// If validation passes, create a new GymModel object and register the member
+        // If validation passes, create a new GymModel object and register the member
         if (isValid) {
             GymModel newMember = new GymModel(Integer.parseInt(memberId), name, Short.parseShort(tfAge.getText()), email, phone, gender, time, Integer.parseInt(fee), address);
             // Check if the member ID already exists
@@ -553,12 +904,23 @@ public class AdminPanel extends javax.swing.JFrame {
             } else {
                 // Register the new member
                 registerMember(newMember);
-                JOptionPane.showMessageDialog(null, "Student added successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+                stackList.push(newMember);
+                loadStackDataToTable(newMember);
+                JOptionPane.showMessageDialog(null, "Member added successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
             }
-
         }
 
     }//GEN-LAST:event_btnSaveActionPerformed
+    /**
+     * Loads a new gym member's data into the top row of the stack table.
+     *
+     * @param member The GymModel object containing the member's data to be
+     * added.
+     */
+    public void loadStackDataToTable(GymModel member) {
+        stackTable.insertRow(0, new Object[]{member.getMemberId(), member.getName(), member.getNumber()});
+    }
+
     /**
      * Event handler for the Reset button. Clears all the input fields and
      * resets the gender selection.
@@ -581,6 +943,25 @@ public class AdminPanel extends javax.swing.JFrame {
         tfAmountToPay.setText("");
         tfMobileNumber.setText("");
         genderGroup.clearSelection();
+        tfMemberId.setBackground(new java.awt.Color(0, 0, 0, 100));
+        lblErrorId.setText("");
+        tfName.setBackground(new java.awt.Color(0, 0, 0, 100));
+        lblErrorName.setText("");
+        tfAge.setBackground(new java.awt.Color(0, 0, 0, 100));
+        lblErrorAge.setText("");
+        tfEmail.setBackground(new java.awt.Color(0, 0, 0, 100));
+        lblErrorEmail.setText("");
+        tfEmail.setBackground(new java.awt.Color(0, 0, 0, 100));
+        lblErrorEmail.setText("");
+        tfAmountToPay.setBackground(new java.awt.Color(0, 0, 0, 100));
+        lblErrorFee.setText("");
+        tfMobileNumber.setBackground(new java.awt.Color(0, 0, 0, 100));
+        lblErrorPhone.setText("");
+        lblErrorGender.setText("");
+        tfAddress.setBackground(new java.awt.Color(0, 0, 0, 100));
+        lblErrorAddress.setText("");
+
+
     }//GEN-LAST:event_btnResetActionPerformed
     /**
      * Event handler for the "View Table" button. This method is triggered when
@@ -750,7 +1131,7 @@ public class AdminPanel extends javax.swing.JFrame {
         String time = (String) cbGymTime.getSelectedItem();
 
         isValid &= validateField(lblErrorGender, "Please select", ValidationUtil.validateGender(gender));
-        isValid &= validateField(lblErrorId, tfMemberId, "It must be a numeric value", ValidationUtil.validateId(memberId));
+        isValid &= validateField(lblErrorId, tfMemberId, "numeric value below 4 digits", ValidationUtil.validateId(memberId));
         isValid &= validateField(lblErrorName, tfName, "Name cannot contain number", ValidationUtil.validateName(name));
         isValid &= validateField(lblErrorEmail, tfEmail, "Please enter a valid email address", ValidationUtil.validateEmail(email));
         isValid &= validateField(lblErrorPhone, tfMobileNumber, "start with 98 and have 10 digits", ValidationUtil.validatePhone(phone));
@@ -797,10 +1178,173 @@ public class AdminPanel extends javax.swing.JFrame {
 
     }//GEN-LAST:event_btnUpdateMainActionPerformed
 
-    private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitActionPerformed
+    private void btnExit1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExit1ActionPerformed
         // TODO add your handling code here:
         System.exit(0);
-    }//GEN-LAST:event_btnExitActionPerformed
+    }//GEN-LAST:event_btnExit1ActionPerformed
+
+    private void btnAdminPanelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdminPanelActionPerformed
+        // TODO add your handling code here:
+        tbMain.setSelectedIndex(0);
+    }//GEN-LAST:event_btnAdminPanelActionPerformed
+    /**
+     * Action handler for the "Dashboard" button. This method is executed when
+     * the "Dashboard" button is clicked.
+     *
+     * @param evt the ActionEvent triggered by the button click.
+     */
+    private void btnDashboardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDashboardActionPerformed
+        // Switches to the dashboard tab by selecting the appropriate index in the tabbed pane.
+        tbMain.setSelectedIndex(1);
+        lblRevenue.setText(totalIncome(memberList));
+        lblTotalMember.setText(totalMembers(memberList));
+        // Checks if the stack containing new members is not empty.
+        if (!stackList.isEmpty()) {
+            lblNewMemberName.setText(stackList.peek().getName());
+        }
+    }//GEN-LAST:event_btnDashboardActionPerformed
+    /**
+     * Handles the sorting functionality when the Sort button is clicked.
+     * Toggles between ascending and descending order and sorts the member list
+     * based on the selected attribute from the combo box.
+     *
+     * Sorting Process: - Checks the current order (ascending or descending). -
+     * Updates the button text and icon to reflect the sorting order. -
+     * Retrieves the selected attribute (e.g., Member Id, Fee, or Name) from the
+     * combo box. - Uses the appropriate sorting algorithm (Selection Sort,
+     * Insertion Sort, or Merge Sort) to sort the `memberList` based on the
+     * selected attribute and order. - Calls `loadSortedData` to display the
+     * sorted list in the table.
+     *
+     * @param evt The ActionEvent triggered by clicking the Sort button.
+     */
+    private void btnSortActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSortActionPerformed
+        // Determine the attribute to sort by (selected in the combo box).
+        String selectedItem = (String) cbSortBy.getSelectedItem();
+        if (ascending) {
+            btnSort.setText("Ascending");
+            btnSort.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/gym/resource/sort-ascending.png")));
+            ascending = false;
+            if (selectedItem.equals("Member Id")) {
+                List<GymModel> sortedList = SelectionSort.sortByMemberId(memberList, true);
+                loadSortedData(sortedList);
+            } else if (selectedItem.equals("Fee")) {
+                List<GymModel> sortedList = insertionSort.sortByAmount(memberList, true);
+                loadSortedData(sortedList);
+            } else {
+                List<GymModel> sortedList = mergeSort.sortByName(memberList, true);
+                loadSortedData(sortedList);
+            }
+        } else {
+            ascending = true;
+            btnSort.setText("Descending");
+            btnSort.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/gym/resource/sort-descending.png")));
+            if (selectedItem.equals("Member Id")) {
+                List<GymModel> sortedList = SelectionSort.sortByMemberId(memberList, false);
+                loadSortedData(sortedList);
+            } else if (selectedItem.equals("Fee")) {
+                List<GymModel> sortedList = insertionSort.sortByAmount(memberList, false);
+                loadSortedData(sortedList);
+            } else {
+                List<GymModel> sortedList = mergeSort.sortByName(memberList, false);
+                loadSortedData(sortedList);
+            }
+        }
+    }//GEN-LAST:event_btnSortActionPerformed
+    /**
+     * Handles the search button click event.
+     *
+     * - Sorts the member list by name in descending order using merge sort. -
+     * Performs a binary search on the sorted list to find the member whose name
+     * matches the input in the search field. - If the member is found, updates
+     * the table to display the search result at the top. - If the member is not
+     * found, displays an error message dialog.
+     *
+     * @param evt The ActionEvent triggered when the search button is clicked.
+     */
+    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
+
+        List<GymModel> sortedList = mergeSort.sortByName(memberList, false);
+        GymModel searchedData = search.searchByName(tfSearchField.getText().trim(), sortedList, 0, sortedList.size() - 1);
+
+        if (searchedData != null) {
+            updateSearchDataToTable(searchedData);
+        } else {
+            JOptionPane.showMessageDialog(null, "Member not found.", "Search Result", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnSearchActionPerformed
+    /**
+     * Updates the table to display the searched member's data at the top.
+     *
+     * - Iterates through the table rows to find the row that matches the
+     * searched member's name. - Removes the matching row from its current
+     * position. - Inserts the matching row at the top of the table. - Updates
+     * the row count and ensures no indexing issues during iteration. -
+     * Highlights the moved row by setting it as the selected row and changing
+     * its background color.
+     *
+     * @param searchMember The GymModel object containing the searched member's
+     * details.
+     */
+
+    private void updateSearchDataToTable(GymModel searchMember) {
+        DefaultTableModel model = (DefaultTableModel) tblMember.getModel();
+        int rowCount = model.getRowCount();
+
+        for (int row = 0; row < rowCount; row++) {
+            String name = model.getValueAt(row, 1).toString();
+            if (name.equalsIgnoreCase(searchMember.getName())) {
+                model.removeRow(row);
+                model.insertRow(0, new Object[]{searchMember.getMemberId(),
+                    searchMember.getName(),
+                    searchMember.getNumber(),
+                    searchMember.getAge(),
+                    searchMember.getGender(),
+                    searchMember.getEmail(),
+                    searchMember.getAddress(),
+                    searchMember.getGymTime(),
+                    searchMember.getAmount()});
+                row--;
+                rowCount--;
+                tblMember.setRowSelectionInterval(0, 0);
+                tblMember.setSelectionBackground(Color.blue);
+            }
+
+        }
+    }
+
+    /**
+     * Loads sorted data into the table.
+     *
+     * - Clears all existing rows from the table to avoid duplications. -
+     * Iterates through the sorted list of GymModel objects. - Adds each
+     * member's details as a new row in the table.
+     *
+     * @param sortedData The list of GymModel objects sorted by the selected
+     * criteria.
+     */
+    private void loadSortedData(List<GymModel> sortedData) {
+        DefaultTableModel model = (DefaultTableModel) tblMember.getModel();
+
+        // Clear the table before loading new data
+        model.setRowCount(0);
+
+        // Iterate through the LinkedList and add each member to the table
+        for (GymModel member : sortedData) {
+            model.addRow(new Object[]{
+                member.getMemberId(),
+                member.getName(),
+                member.getNumber(),
+                member.getAge(),
+                member.getGender(),
+                member.getEmail(),
+                member.getAddress(),
+                member.getGymTime(),
+                member.getAmount()
+            });
+        }
+    }
+
     /**
      * Loads the member data from the `memberList` into the JTable.
      *
@@ -915,6 +1459,30 @@ public class AdminPanel extends javax.swing.JFrame {
     }
 
     /**
+     * Calculates the total income from all gym members.
+     *
+     * @param members The list of GymModel objects representing the gym members.
+     * @return The total income as a String.
+     */
+    private String totalIncome(List<GymModel> members) {
+        int totalIncome = 0;
+        for (GymModel member : members) {
+            totalIncome = totalIncome + member.getAmount();
+        }
+        return String.valueOf(totalIncome);
+    }
+
+    /**
+     * Calculates the total number of gym members.
+     *
+     * @param members The list of GymModel objects representing the gym members.
+     * @return The total number of members as a String.
+     */
+    private String totalMembers(List<GymModel> members) {
+        return String.valueOf(members.size());
+    }
+
+    /**
      * Deletes the selected member from the member list and the table.
      *
      * This method searches for the member with the specified ID in the
@@ -982,20 +1550,27 @@ public class AdminPanel extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAdminPanel;
     private javax.swing.JButton btnBack;
+    private javax.swing.JButton btnDashboard;
     private javax.swing.JButton btnDeleteMember;
-    private javax.swing.JButton btnExit;
+    private javax.swing.JButton btnExit1;
     private javax.swing.JButton btnReset;
     private javax.swing.JButton btnSave;
+    private javax.swing.JButton btnSearch;
+    private javax.swing.JButton btnSort;
     private javax.swing.JButton btnUpdateList;
     private javax.swing.JButton btnUpdateMain;
     private javax.swing.JButton btnViewTable;
     private javax.swing.JComboBox<String> cbGymTime;
+    private javax.swing.JComboBox<String> cbSortBy;
     private javax.swing.ButtonGroup genderGroup;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel lblAddMemberIcon;
     private javax.swing.JLabel lblAddress;
     private javax.swing.JLabel lblAge;
     private javax.swing.JLabel lblAmountToPay;
+    private javax.swing.JLabel lblDashBoardIcon;
     private javax.swing.JLabel lblEmail;
     private javax.swing.JLabel lblErrorAddress;
     private javax.swing.JLabel lblErrorAge;
@@ -1005,17 +1580,42 @@ public class AdminPanel extends javax.swing.JFrame {
     private javax.swing.JLabel lblErrorId;
     private javax.swing.JLabel lblErrorName;
     private javax.swing.JLabel lblErrorPhone;
+    private javax.swing.JLabel lblEventIcon;
+    private javax.swing.JLabel lblEventName;
     private javax.swing.JLabel lblGender;
     private javax.swing.JLabel lblGymTime;
+    private javax.swing.JLabel lblIconMoney;
+    private javax.swing.JLabel lblIconNewMember;
     private javax.swing.JLabel lblListOfMemberIcon;
     private javax.swing.JLabel lblMemberId;
     private javax.swing.JLabel lblMobileNumber;
     private javax.swing.JLabel lblName;
+    private javax.swing.JLabel lblNewMemberName;
+    private javax.swing.JLabel lblNewMemberTitle;
+    private javax.swing.JLabel lblRevenue;
+    private javax.swing.JLabel lblRevenueTitle;
+    private javax.swing.JLabel lblTotalMember;
+    private javax.swing.JLabel lblTotalMemberIcon;
+    private javax.swing.JLabel lblTotalMemberTitle;
+    private javax.swing.JLabel lblUpcomingEventTitle;
     private javax.swing.JPanel pnlAddMemberMain;
+    private javax.swing.JPanel pnlAdminPanel;
+    private javax.swing.JPanel pnlDashBoard;
+    private javax.swing.JPanel pnlMenuBar;
+    private javax.swing.JPanel pnlShowNewMember;
+    private javax.swing.JPanel pnlShowRevenue;
+    private javax.swing.JPanel pnlShowTotalMember;
+    private javax.swing.JPanel pnlShowUPcomingEvents;
     private javax.swing.JPanel pnlTable;
     private javax.swing.JRadioButton rbFemale;
     private javax.swing.JRadioButton rbMale;
+    private javax.swing.JScrollPane spEvent;
     private javax.swing.JScrollPane spMemberTable;
+    private javax.swing.JScrollPane spNewMemberTable;
+    private javax.swing.JLabel stackDataTable;
+    private javax.swing.JTable stackNewMemberTable;
+    private javax.swing.JTabbedPane tbMain;
+    private javax.swing.JTable tblEvents;
     private javax.swing.JTable tblMember;
     private javax.swing.JTextField tfAddress;
     private javax.swing.JTextField tfAge;
@@ -1024,5 +1624,6 @@ public class AdminPanel extends javax.swing.JFrame {
     private javax.swing.JTextField tfMemberId;
     private javax.swing.JTextField tfMobileNumber;
     private javax.swing.JTextField tfName;
+    private javax.swing.JTextField tfSearchField;
     // End of variables declaration//GEN-END:variables
 }
