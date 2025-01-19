@@ -3,9 +3,16 @@ package com.gym.util;
 import java.util.regex.Pattern;
 
 /**
- *
- * @author Anish Shrestha 23048634
+ * Utility class for validating user input fields in the gym management system.
+ * This class provides various methods to validate common fields such as 
+ * names, emails, phone numbers, fees, and IDs using regular expressions (regex).
+ * It also includes a method to validate gender values.
+ * Each validation method ensures that the input data adheres to the required 
+ * format and constraints, improving the overall data integrity of the system.
+ * 
+ * Author: Anish Shrestha (23048634)
  */
+
 public class ValidationUtil {
 
     private static final String NAME_REGEX = "^[A-Za-z ]{2,50}$"; // Letters and spaces, 2-50 characters

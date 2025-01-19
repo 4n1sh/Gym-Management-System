@@ -7,9 +7,13 @@ import com.gym.controller.algorithms.InsertionSort;
 import com.gym.controller.algorithms.MergeSort;
 import com.gym.controller.algorithms.SelectionSort;
 import com.gym.controller.dataStructure.CustomStack;
+import com.gym.controller.datastructure.CustomQueue;
 import com.gym.model.GymModel;
+import com.gym.model.RequestModel;
 import com.gym.util.ValidationUtil;
 import java.awt.Color;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -46,6 +50,8 @@ public class AdminPanel extends javax.swing.JFrame {
     private boolean ascending = true;
     private final BinarySearch search = new BinarySearch();
     DefaultTableModel stackTable;
+    private final CustomQueue queue = new CustomQueue();
+    DefaultTableModel queueTable;
 
     /**
      * Constructor for the AdminPanel class. Initializes the panel components,
@@ -57,6 +63,7 @@ public class AdminPanel extends javax.swing.JFrame {
         pnlTable.setVisible(false);
         initializeData();
         this.stackTable = (DefaultTableModel) stackNewMemberTable.getModel();
+        this.queueTable = (DefaultTableModel) tblRequests.getModel();
     }
 
     /**
@@ -140,8 +147,11 @@ public class AdminPanel extends javax.swing.JFrame {
         spNewMemberTable = new javax.swing.JScrollPane();
         stackNewMemberTable = new javax.swing.JTable();
         spEvent = new javax.swing.JScrollPane();
-        tblEvents = new javax.swing.JTable();
-        jLabel1 = new javax.swing.JLabel();
+        tblRequests = new javax.swing.JTable();
+        lblManageRequest = new javax.swing.JLabel();
+        btnAddRequest = new javax.swing.JButton();
+        tfGetRequest = new javax.swing.JTextField();
+        btnNextRequest = new javax.swing.JButton();
         lblDashBoardIcon = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -730,7 +740,7 @@ public class AdminPanel extends javax.swing.JFrame {
         stackDataTable.setForeground(new java.awt.Color(255, 196, 40));
         stackDataTable.setText("Lastest Members");
         pnlDashBoard.add(stackDataTable);
-        stackDataTable.setBounds(80, 590, 320, 30);
+        stackDataTable.setBounds(80, 600, 320, 30);
 
         stackNewMemberTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -761,12 +771,12 @@ public class AdminPanel extends javax.swing.JFrame {
         pnlDashBoard.add(spNewMemberTable);
         spNewMemberTable.setBounds(80, 640, 510, 280);
 
-        tblEvents.setModel(new javax.swing.table.DefaultTableModel(
+        tblRequests.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Event  Name", "Date"
+                "Request", "Date"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -777,22 +787,48 @@ public class AdminPanel extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        tblEvents.setRowHeight(30);
-        tblEvents.getTableHeader().setReorderingAllowed(false);
-        spEvent.setViewportView(tblEvents);
-        if (tblEvents.getColumnModel().getColumnCount() > 0) {
-            tblEvents.getColumnModel().getColumn(0).setResizable(false);
-            tblEvents.getColumnModel().getColumn(1).setResizable(false);
+        tblRequests.setRowHeight(30);
+        tblRequests.getTableHeader().setReorderingAllowed(false);
+        spEvent.setViewportView(tblRequests);
+        if (tblRequests.getColumnModel().getColumnCount() > 0) {
+            tblRequests.getColumnModel().getColumn(0).setResizable(false);
+            tblRequests.getColumnModel().getColumn(1).setResizable(false);
         }
 
         pnlDashBoard.add(spEvent);
-        spEvent.setBounds(1290, 630, 490, 280);
+        spEvent.setBounds(1290, 640, 490, 280);
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 196, 40));
-        jLabel1.setText("Upcoming Events");
-        pnlDashBoard.add(jLabel1);
-        jLabel1.setBounds(1290, 580, 240, 32);
+        lblManageRequest.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        lblManageRequest.setForeground(new java.awt.Color(255, 196, 40));
+        lblManageRequest.setText("Member Requests");
+        pnlDashBoard.add(lblManageRequest);
+        lblManageRequest.setBounds(1290, 600, 240, 32);
+
+        btnAddRequest.setBackground(new java.awt.Color(0, 0, 0));
+        btnAddRequest.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnAddRequest.setForeground(new java.awt.Color(255, 196, 40));
+        btnAddRequest.setText("Add Request");
+        btnAddRequest.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddRequestActionPerformed(evt);
+            }
+        });
+        pnlDashBoard.add(btnAddRequest);
+        btnAddRequest.setBounds(1680, 600, 110, 27);
+        pnlDashBoard.add(tfGetRequest);
+        tfGetRequest.setBounds(1540, 600, 130, 30);
+
+        btnNextRequest.setBackground(new java.awt.Color(0, 0, 0));
+        btnNextRequest.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnNextRequest.setForeground(new java.awt.Color(255, 196, 40));
+        btnNextRequest.setText("Next");
+        btnNextRequest.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNextRequestActionPerformed(evt);
+            }
+        });
+        pnlDashBoard.add(btnNextRequest);
+        btnNextRequest.setBounds(1700, 920, 76, 27);
 
         lblDashBoardIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/gym/resource/dashboardIcon.png"))); // NOI18N
         pnlDashBoard.add(lblDashBoardIcon);
@@ -833,10 +869,9 @@ public class AdminPanel extends javax.swing.JFrame {
      * @param member The GymModel object representing the new member to be
      * added.
      */
-    void registerMember(GymModel member) {
+    public void registerMember(GymModel member) {
         memberList.add(member);// Adds the member to the member list.
         DefaultTableModel model = (DefaultTableModel) tblMember.getModel(); // Retrieves the current table model of the JTable.
-
         // Adds a new row to the JTable with the member's details.
         model.addRow(new Object[]{member.getMemberId(),
             member.getName(), member.getNumber(), member.getAge(),
@@ -943,6 +978,7 @@ public class AdminPanel extends javax.swing.JFrame {
         tfAmountToPay.setText("");
         tfMobileNumber.setText("");
         genderGroup.clearSelection();
+        tfAddress.setText("");
         tfMemberId.setBackground(new java.awt.Color(0, 0, 0, 100));
         lblErrorId.setText("");
         tfName.setBackground(new java.awt.Color(0, 0, 0, 100));
@@ -1274,6 +1310,62 @@ public class AdminPanel extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnSearchActionPerformed
     /**
+     * Handles the Add Request button click event.
+     *
+     * - Retrieves the request text entered by the user from the text field. -
+     * Gets the current date and formats it as a string in "yyyy-MM-dd" format.
+     * - If the request text is not empty, creates a new RequestModel object
+     * with the request and the current date, and adds it to the queue. - Loads
+     * the newly added request data to the table for display. - If the request
+     * text is empty, shows an error message dialog prompting the user to enter
+     * a request.
+     *
+     * @param evt The ActionEvent triggered when the Add Request button is
+     * clicked.
+     */
+    private void btnAddRequestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddRequestActionPerformed
+        // TODO add your handling code here:
+        String req = tfGetRequest.getText();
+        // Get the current date
+        LocalDate currentDate = LocalDate.now();
+        // Format the date as a string
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String time = currentDate.format(formatter);
+        if (!req.isEmpty()) {
+            RequestModel requestQueue = new RequestModel(req, time);
+            queue.enQueue(requestQueue);
+            loadQueueDataToTable(requestQueue);
+        } else {
+            JOptionPane.showMessageDialog(null, "Enter Requests!", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnAddRequestActionPerformed
+    /**
+     * Handles the Next Request button click event.
+     *
+     * - Dequeues the first request from the queue by calling the `deQueue()`
+     * method. - Removes the first row from the table to reflect the removal of
+     * the request from the queue using the `removeRow(0)` method of the table
+     * model.
+     *
+     * @param evt The ActionEvent triggered when the Next Request button is
+     * clicked.
+     */
+    private void btnNextRequestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextRequestActionPerformed
+        // TODO add your handling code here:
+        queue.deQueue();
+        queueTable.removeRow(0);
+    }//GEN-LAST:event_btnNextRequestActionPerformed
+    /**
+     * Loads a new Requests data in the stack table.
+     *
+     * @param request The RequestModel object containing the request's data to
+     * be added.
+     */
+    public void loadQueueDataToTable(RequestModel request) {
+        queueTable.addRow(new Object[]{request.getRequest(), request.getTime()});
+    }
+
+    /**
      * Updates the table to display the searched member's data at the top.
      *
      * - Iterates through the table rows to find the row that matches the
@@ -1286,7 +1378,6 @@ public class AdminPanel extends javax.swing.JFrame {
      * @param searchMember The GymModel object containing the searched member's
      * details.
      */
-
     private void updateSearchDataToTable(GymModel searchMember) {
         DefaultTableModel model = (DefaultTableModel) tblMember.getModel();
         int rowCount = model.getRowCount();
@@ -1550,11 +1641,13 @@ public class AdminPanel extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAddRequest;
     private javax.swing.JButton btnAdminPanel;
     private javax.swing.JButton btnBack;
     private javax.swing.JButton btnDashboard;
     private javax.swing.JButton btnDeleteMember;
     private javax.swing.JButton btnExit1;
+    private javax.swing.JButton btnNextRequest;
     private javax.swing.JButton btnReset;
     private javax.swing.JButton btnSave;
     private javax.swing.JButton btnSearch;
@@ -1565,7 +1658,6 @@ public class AdminPanel extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> cbGymTime;
     private javax.swing.JComboBox<String> cbSortBy;
     private javax.swing.ButtonGroup genderGroup;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel lblAddMemberIcon;
     private javax.swing.JLabel lblAddress;
     private javax.swing.JLabel lblAge;
@@ -1587,6 +1679,7 @@ public class AdminPanel extends javax.swing.JFrame {
     private javax.swing.JLabel lblIconMoney;
     private javax.swing.JLabel lblIconNewMember;
     private javax.swing.JLabel lblListOfMemberIcon;
+    private javax.swing.JLabel lblManageRequest;
     private javax.swing.JLabel lblMemberId;
     private javax.swing.JLabel lblMobileNumber;
     private javax.swing.JLabel lblName;
@@ -1615,12 +1708,13 @@ public class AdminPanel extends javax.swing.JFrame {
     private javax.swing.JLabel stackDataTable;
     private javax.swing.JTable stackNewMemberTable;
     private javax.swing.JTabbedPane tbMain;
-    private javax.swing.JTable tblEvents;
     private javax.swing.JTable tblMember;
+    private javax.swing.JTable tblRequests;
     private javax.swing.JTextField tfAddress;
     private javax.swing.JTextField tfAge;
     private javax.swing.JTextField tfAmountToPay;
     private javax.swing.JTextField tfEmail;
+    private javax.swing.JTextField tfGetRequest;
     private javax.swing.JTextField tfMemberId;
     private javax.swing.JTextField tfMobileNumber;
     private javax.swing.JTextField tfName;

@@ -3,7 +3,6 @@ package com.gym.controller.algorithms;
 import com.gym.model.GymModel;
 import java.util.ArrayList;
 import java.util.List;
-
 /**
  *
  * @author Anish
@@ -15,7 +14,6 @@ public class SelectionSort {
     public SelectionSort() {
         sortedMemberList = new ArrayList<>();
     }
-
     /**
      * Sorts a list of StudentModel objects by their LMU ID in ascending or
      * descending order.
@@ -31,17 +29,14 @@ public class SelectionSort {
         if (sortedMemberList == null || sortedMemberList.isEmpty()) {
             throw new IllegalArgumentException("Student list cannot be null or empty.");
         }
-
         for (int i = 0; i < sortedMemberList.size() - 1; i++) {
             int extremumIndex = findExtremumIndex(sortedMemberList, i, isDesc);
             if (i != extremumIndex) {
                 swap(sortedMemberList, i, extremumIndex);
             }
         }
-
         return sortedMemberList;
     }
-
     /**
      * Finds the index of the extremum value (minimum or maximum) in the list
      * from the start index.
@@ -54,16 +49,13 @@ public class SelectionSort {
      */
     private int findExtremumIndex(List<GymModel> memberSortedList, int startIndex, boolean isDesc) {
         int extremumIndex = startIndex;
-
         for (int j = startIndex + 1; j < memberSortedList.size(); j++) {
             if (shouldSwap(memberSortedList.get(j).getMemberId(), memberSortedList.get(extremumIndex).getMemberId(), isDesc)) {
                 extremumIndex = j;
             }
         }
-
         return extremumIndex;
     }
-
     /**
      * Determines whether the current value should replace the current extremum
      * based on sort order.
@@ -78,7 +70,6 @@ public class SelectionSort {
     private boolean shouldSwap(int current, int extremum, boolean isDesc) {
         return isDesc ? current > extremum : current < extremum;
     }
-
     /**
      * Swaps two elements in the list.
      *

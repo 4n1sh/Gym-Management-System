@@ -3,13 +3,11 @@ package com.gym.controller.algorithms;
 import com.gym.model.GymModel;
 import java.util.ArrayList;
 import java.util.List;
-
 /**
  *
  * @author Anish
  */
 public class MergeSort {
-
     /**
      * Sorts a list of GymModel objects by their name in ascending or descending
      * order.
@@ -23,10 +21,8 @@ public class MergeSort {
         if (memberList == null || memberList.isEmpty()) {
             throw new IllegalArgumentException("Member list cannot be null or empty.");
         }
-
         return mergeSort(memberList, isDesc);
     }
-
     /**
      * Recursively divides the list and merges the sorted sublists.
      *
@@ -39,7 +35,6 @@ public class MergeSort {
         if (memberList.size() <= 1) {
             return memberList;
         }
-
         int mid = memberList.size() / 2;
 
         List<GymModel> left = new ArrayList<>(memberList.subList(0, mid));
@@ -50,7 +45,6 @@ public class MergeSort {
 
         return merge(left, right, isDesc);
     }
-
     /**
      * Merges two sorted lists into a single sorted list.
      *
@@ -63,7 +57,6 @@ public class MergeSort {
     private List<GymModel> merge(List<GymModel> left, List<GymModel> right, boolean isDesc) {
         List<GymModel> merged = new ArrayList<>();
         int i = 0, j = 0;
-
         while (i < left.size() && j < right.size()) {
             if (shouldSwap(left.get(i).getName(), right.get(j).getName(), isDesc)) {
                 merged.add(right.get(j));
@@ -73,22 +66,18 @@ public class MergeSort {
                 i++;
             }
         }
-
         // Add remaining elements from the left list
         while (i < left.size()) {
             merged.add(left.get(i));
             i++;
         }
-
         // Add remaining elements from the right list
         while (j < right.size()) {
             merged.add(right.get(j));
             j++;
         }
-
         return merged;
     }
-
     /**
      * Determines whether two names should be swapped based on the sort order.
      *

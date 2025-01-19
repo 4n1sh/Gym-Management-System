@@ -2,8 +2,6 @@ package com.gym.controller.dataStructure;
 
 import com.gym.model.GymModel;
 import java.util.LinkedList;
-import javax.swing.table.DefaultTableModel;
-
 /**
  * Custom implementation of a stack data structure for managing GymModel
  * objects. This stack is implemented using a LinkedList and supports basic
@@ -12,16 +10,13 @@ import javax.swing.table.DefaultTableModel;
  * @author Anish
  */
 public class CustomStack {
-
     private LinkedList<GymModel> stackList; // Internal storage for the stack.
-
     /**
      * Constructs a CustomStack with no capacity limit.
      */
     public CustomStack() {
         stackList = new LinkedList<>();
     }
-
     /**
      * Removes and returns the top element from the stack.
      *
@@ -35,7 +30,6 @@ public class CustomStack {
             throw new IllegalStateException("Cannot pop from an empty stack.");
         }
     }
-
     /**
      * Adds a new element to the top of the stack.
      *
@@ -46,7 +40,6 @@ public class CustomStack {
         stackList.addLast(gymModel);
         return stackList.size();
     }
-
     /**
      * Retrieves, but does not remove, the top element of the stack.
      *
@@ -60,7 +53,6 @@ public class CustomStack {
             throw new IllegalStateException("Cannot peek into an empty stack.");
         }
     }
-
     /**
      * Returns the current size of the stack.
      *
@@ -69,7 +61,6 @@ public class CustomStack {
     public int size() {
         return stackList.size();
     }
-
     /**
      * Checks if the stack is empty.
      *
@@ -78,6 +69,4 @@ public class CustomStack {
     public boolean isEmpty() {
         return stackList.isEmpty();
     }
-
-
 }
