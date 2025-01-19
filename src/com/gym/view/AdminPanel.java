@@ -56,7 +56,7 @@ public class AdminPanel extends javax.swing.JFrame {
     /**
      * Constructor for the AdminPanel class. Initializes the panel components,
      * hides the table panel by default, and populates the member list with
-     * initial data.
+     * initial data
      */
     public AdminPanel() {
         initComponents();
